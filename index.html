@@ -1,15 +1,249 @@
 <!doctype html>
 <html lang="en">
-<head><meta charset="utf-8"><title>Zero Cap Finance Analytics Tool</title></head>
-<body style="font-family:system-ui,sans-serif;max-width:720px;margin:48px auto;padding:0 24px;line-height:1.6">
-<h1>Zero Cap Finance Analytics Tool</h1>
-<p>Personal-use analytics dashboard for the Zero Cap Finance creator account.
-Reads the operator's own TikTok and YouTube creator metrics via official APIs
-and aggregates them into a local dashboard.</p>
-<p>Channel: <a href="https://www.youtube.com/@zerocap-fin">youtube.com/@zerocap-fin</a></p>
-<ul>
-<li><a href="terms.html">Terms of Service</a></li>
-<li><a href="privacy.html">Privacy Policy</a></li>
-</ul>
-<p>Contact: <em>zerocapfin@gmail.com</em></p>
-</body></html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Zero Cap Finance Analytics Tool — Creator Dashboard</title>
+  <meta name="description" content="A private analytics dashboard for the Zero Cap Finance creator account. Aggregates TikTok and YouTube performance metrics for content iteration.">
+  <style>
+    :root {
+      --bg: #0B1220;
+      --bg-soft: #131C30;
+      --fg: #E8ECF5;
+      --muted: #8A95AE;
+      --accent: #5DA9FF;
+      --border: #1F2A44;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; padding: 0; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--fg);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 0 24px; }
+    header {
+      padding: 32px 0 16px;
+      border-bottom: 1px solid var(--border);
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+    }
+    .brand-mark {
+      width: 32px; height: 32px;
+      border-radius: 6px;
+      background: var(--accent);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      color: var(--bg);
+      font-weight: 800;
+    }
+    .hero {
+      padding: 64px 0 48px;
+      border-bottom: 1px solid var(--border);
+    }
+    .hero h1 {
+      margin: 0 0 16px;
+      font-size: 40px;
+      line-height: 1.15;
+      letter-spacing: -0.5px;
+    }
+    .hero p.lead {
+      margin: 0;
+      color: var(--muted);
+      font-size: 18px;
+      max-width: 680px;
+    }
+    .section { padding: 48px 0; border-bottom: 1px solid var(--border); }
+    .section h2 {
+      margin: 0 0 24px;
+      font-size: 22px;
+      letter-spacing: -0.2px;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+    @media (max-width: 640px) { .grid { grid-template-columns: 1fr; } }
+    .card {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 20px 22px;
+    }
+    .card h3 {
+      margin: 0 0 8px;
+      font-size: 16px;
+      color: var(--fg);
+    }
+    .card code {
+      background: rgba(93,169,255,0.1);
+      color: var(--accent);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    .card p {
+      margin: 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .privacy-note {
+      background: var(--bg-soft);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 8px;
+      padding: 16px 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .privacy-note strong { color: var(--fg); }
+    footer {
+      padding: 32px 0 48px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    footer ul { list-style: none; padding: 0; margin: 0 0 12px; display: flex; gap: 18px; flex-wrap: wrap; }
+    .small { font-size: 13px; color: var(--muted); }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <span class="brand-mark">ZC</span>
+        <span>Zero Cap Finance — Analytics Tool</span>
+      </div>
+    </header>
+
+    <section class="hero">
+      <h1>A private creator dashboard for Zero Cap Finance.</h1>
+      <p class="lead">
+        Pulls the operator's own TikTok and YouTube performance metrics into a
+        single local dashboard. Built to support content iteration: which hooks
+        retain viewers, which formats convert to follows, which beats lose
+        attention. Not a public service. No third-party data. No advertising.
+      </p>
+    </section>
+
+    <section class="section">
+      <h2>What it does</h2>
+      <p style="margin:0 0 20px; color:var(--muted); max-width:680px;">
+        The tool authenticates with TikTok and YouTube using the official
+        Display API and Data API respectively, fetches the operator's own
+        creator metrics on a daily schedule, and renders a local dashboard.
+        All data lives on the operator's machine. Nothing is uploaded, shared,
+        sold, or shown to third parties.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3>Daily metrics aggregation</h3>
+          <p>Subscriber counts, follower deltas, video views, watch-time, and
+          engagement totals roll into a single state file refreshed each
+          morning by a scheduled task.</p>
+        </div>
+        <div class="card">
+          <h3>Per-video performance</h3>
+          <p>Top and bottom performers surfaced for each posting cadence so
+          the operator can identify hook patterns that work and patterns that
+          don't.</p>
+        </div>
+        <div class="card">
+          <h3>Cross-platform view</h3>
+          <p>TikTok and YouTube metrics in one place so the operator can
+          compare format performance across the two short-form surfaces.</p>
+        </div>
+        <div class="card">
+          <h3>Audit trail</h3>
+          <p>Per-day JSON snapshots accumulate over time, enabling trend
+          analysis and regression detection across weeks and months.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>TikTok scopes used</h2>
+      <p style="margin:0 0 20px; color:var(--muted); max-width:680px;">
+        Each scope is requested only because a specific dashboard feature
+        depends on it. All access is read-only.
+      </p>
+      <div class="grid">
+        <div class="card">
+          <h3><code>user.info.profile</code></h3>
+          <p>Read the authenticated creator's profile fields (display name,
+          avatar, bio, follower/following counts) to display channel context
+          inside the dashboard.</p>
+        </div>
+        <div class="card">
+          <h3><code>user.info.stats</code></h3>
+          <p>Pull aggregate creator statistics (total followers, total likes,
+          total video count) to compute follower deltas and growth-rate
+          curves over time.</p>
+        </div>
+        <div class="card">
+          <h3><code>video.list</code></h3>
+          <p>List the operator's own published videos with engagement
+          metadata (views, likes, comments, shares) so the dashboard can
+          identify top/bottom performers and compute hook-iteration metrics.
+          Only the operator's own videos are queried.</p>
+        </div>
+        <div class="card">
+          <h3>Read-only by design</h3>
+          <p>The application never publishes content, modifies profile data,
+          messages other users, or accesses other creators' information.
+          Tokens can be revoked from TikTok account settings at any time.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Privacy posture</h2>
+      <div class="privacy-note">
+        <p style="margin:0 0 8px;"><strong>Single-user, local-only.</strong>
+        The application runs on the operator's local machine. There is no
+        backend server, no database, no CDN, no analytics pixel, no
+        third-party SDK. All fetched data is stored on disk in a YAML state
+        file and a per-day JSON archive.</p>
+        <p style="margin:0;"><strong>No data is shared, sold, or transmitted.</strong>
+        The application never sends data outside the local machine, never
+        contacts third-party APIs other than TikTok and YouTube to fetch the
+        operator's own metrics, and never displays any user-facing UI to
+        people other than the operator.</p>
+      </div>
+    </section>
+
+    <section class="section">
+      <h2>Channel</h2>
+      <p style="margin:0; color:var(--muted);">
+        The Zero Cap Finance brand publishes finance-education shorts on
+        YouTube and TikTok. The dashboard exists to support content
+        iteration on that brand.
+      </p>
+      <p style="margin:12px 0 0;">
+        <a href="https://www.youtube.com/@zerocap-fin">youtube.com/@zerocap-fin</a>
+      </p>
+    </section>
+
+    <footer>
+      <ul>
+        <li><a href="terms.html">Terms of Service</a></li>
+        <li><a href="privacy.html">Privacy Policy</a></li>
+      </ul>
+      <p class="small">© 2026 Zero Cap Finance. Personal-use creator analytics tool.
+      Not a financial-advice product. Not for sale or distribution.</p>
+    </footer>
+  </div>
+</body>
+</html>
+
